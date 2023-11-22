@@ -1,55 +1,71 @@
-//importamos o express
-//API (Application Program Interface)
+// API (Application Program Interface)
+// importamos o express
 const express = require('express');
 const crypto = require('crypto');
+const cors = require('cors');
 
-//inicializa um servidor web com express
+// inicializa um servidor web com express
 const app = express();
 
-//criar uma lista de tarefas pre cadastrada
+// fala pro express ultilizar o middleware para trabalharmos com json
+app.use(express.json());
+
+// uso o middleware para remover o problema de cors
+app.use(cors());
+
+// Criar uma lista de tarefas pre cadastrada
 const tarefas = [
-    {
-        id: crypto.randomUUID(),
-        text: 'Ir ao mercado',
-        prazo: '2 Dias'
-    },
-    {
-        id: crypto.randomUUID(),
-        text: 'estudar sobre git',
-        prazo: '3 dias'
-    },
-    {
-        id: crypto.randomUUID(),
-        text: 'estudar sobre git',
-        prazo: '3 dias'
-    }
+  {
+    id: crypto.randomUUID(), 
+    text: 'Ir ao mercado',
+    prazo: '2 dias'
+  },
+  {
+    id: crypto.randomUUID(), 
+    text: 'Estudar sobre git',
+    prazo: '3 dias'
+  },
+  {
+    id: crypto.randomUUID(), 
+    text: 'Estudar Javascript',
+    prazo: '10 dias'
+  },
+  {
+    id: crypto.randomUUID(), 
+    text: 'Estudar Desenvolvimento de Jogos',
+    prazo: '20 dias'
+  }
 ]
 
 
+// REST - POST / GET / PUT / DELETE
+// CRUD - CREATE / READ / UPDATE / DELETE
+app.get('/', (req, res) => {
+  res.send('Olá Galera!');
+})
 
-//fala pro express ultilizar o middleware para trabalharmos com json
-app.use(express.json());
+// Rota que lista todas as tarefas pré cadastradas
+app.get('/tarefas', (req, res) => {
+  res.send(tarefas);
+})
 
-//rest - get/post/put/delete
-//crud - Create/ read / update / delete
-app.get('/', (req, res)=> {
-    res.send('Ola galera!')
-});
+// Rota que busca por uma tarefa especifica
+app.get('/tarefas/:id', (req, res) => {
+  //acessar o parametro da URL
+  const idParam = req.params.id;
 
-//rota que lista as tarefas cadastradas
-app.get('/taredas', (req, res)=>{
-    res.send(tarefas);
-});
+  // buscar o item na lista de acordo com o seu ID
+  const tarefa = tarefas.find((tarefa) => tarefa.id == idParam);
 
-// Rota que busca uma tarefa especifica
-app.get('/tarefas/:id', (req, res)=> {
-    //acessar o parametro da URl
-    const idParam = req.params.id;
-    const tarefa = tarefas.find((tarefa) => tarefa.id == dparam)
-});
+  // retorna a tarefa unica pelo o seu id
+  res.send(tarefa);
+})
 
-//defino uma porta de rede para rodar o meu servidor web
+
+// defino uma porta de rede para rodar o meu sevidor web
 const port = 3000;
+
+// inicializamos o servidor na porta pre definida
 app.listen(port, () => {
-    console.log('O app esta na porta 3000')
-});
+  console.log('O app esta rodando na porta 3000')
+})
